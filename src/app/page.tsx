@@ -4,7 +4,7 @@ import UserInfo from '@/components/user-info'
 import React from 'react'
 import SignInButtonClient from '@/components/client/signin-button'
 import SignOutButtonClient from '@/components/client/signout-button'
-
+import UserInfoClient from '@/components/client/user-info'
 export default function page() {
   return (
     <div>
@@ -14,6 +14,8 @@ export default function page() {
       <hr />
       <SignInButtonClient /> 
       <SignOutButtonClient />
+      <hr />
+      <UserInfoClient />
     </div>
   )
 }
