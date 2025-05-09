@@ -125,3 +125,90 @@ npm run dev
 ## 许可证
 
 MIT
+
+## 用户权限管理
+
+本项目支持在 `users` 表中通过 `role` 字段实现用户权限管理，具体方案如下：
+
+### 1. 数据库表结构扩展
+
+在 Supabase SQL 编辑器中执行以下命令，为 `users` 表增加 `role` 字段：
+
+```sql
+ALTER TABLE next_auth.users ADD COLUMN role TEXT DEFAULT 'user';
+```
+
+- 每个用户将拥有一个 `role` 字段，默认值为 `'user'`，可根据需要设置为 `'admin'`、`'editor'` 等。
+
+### 2. 类型声明扩展
+
+在 `src/types/next-auth.d.ts` 文件中扩展 NextAuth 的类型定义，支持 `role` 字段：
+
+```typescript
+import NextAuth, { DefaultSession, User as NextAuthUser } from "next-auth"
+
+declare module "next-auth" {
+  interface User extends NextAuthUser {
+    role?: string
+  }
+  interface Session {
+    user: {
+      role?: string
+    } & DefaultSession["user"]
+  }
+}
+```
+
+### 3. 在 Session 中注入权限字段
+
+在 `src/auth.ts` 的 `session` 回调中，将 `role` 字段注入到 session：
+
+```typescript
+callbacks: {
+  async session({ session, user }) {
+    if (session.user && user) {
+      session.user.role = user.role
+    }
+    return session
+  }
+}
+```
+
+### 4. 前后端权限校验示例
+
+**前端：**
+
+```typescript
+import { useSession } from "next-auth/react"
+
+function AdminPanel() {
+  const { data: session } = useSession()
+  if (session?.user.role !== 'admin') {
+    return <div>无权限访问</div>
+  }
+  return <div>欢迎管理员！</div>
+}
+```
+
+**后端 API：**
+
+```typescript
+import { auth } from "@/auth"
+
+export async function GET() {
+  const session = await auth()
+  if (session?.user.role !== 'admin') {
+    return new Response('无权限', { status: 403 })
+  }
+  // 管理员操作
+  return new Response('OK')
+}
+```
+
+### 5. 角色管理
+
+- 可以在 Supabase 控制台直接修改 `users` 表中的 `role` 字段，或通过后台管理页面实现角色分配。
+
+---
+
+通过上述方案，项目实现了灵活的权限管理，支持前后端统一的权限校验。
