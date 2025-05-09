@@ -8,4 +8,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     url: process.env.NEXT_PUBLIC_SUPABASE_URL as string,
     secret: process.env.SUPABASE_SERVICE_ROLE_KEY as string,
   }),
+  callbacks: {
+    async session({ session, user }) {
+      // 将 role 字段注入 session
+      if (session.user && user) {
+        session.user.role = user.role
+      }
+      return session
+    }
+  }
 })
