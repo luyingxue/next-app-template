@@ -16,5 +16,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return session
     }
-  }
+  },
+  // 添加信任的主机名配置
+  trustHost: true
 })
