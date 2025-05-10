@@ -1,5 +1,5 @@
 "use client"
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button} from "@heroui/react";
+import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Avatar} from "@heroui/react";
 import { useSession } from "next-auth/react";
 
 export const AcmeLogo = () => {
@@ -47,10 +47,11 @@ export default function Header() {
             <NavbarItem>
               <div className="flex items-center gap-2">
                 {session.user?.image && (
-                  <img 
+                  <Avatar 
                     src={session.user.image} 
-                    alt="用户头像" 
-                    className="w-8 h-8 rounded-full"
+                    alt="用户头像"
+                    size="sm"
+                    isBordered
                   />
                 )}
                 <p className="text-sm">{session.user?.email}</p>
@@ -67,11 +68,6 @@ export default function Header() {
             <NavbarItem className="hidden lg:flex">
               <Button as={Link} color="secondary" href="/api/auth/signin" variant="bordered">
                 登录
-              </Button>
-            </NavbarItem>
-            <NavbarItem>
-              <Button as={Link} color="secondary" href="/api/auth/signin">
-                注册
               </Button>
             </NavbarItem>
           </>
