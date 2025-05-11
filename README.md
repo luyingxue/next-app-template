@@ -140,41 +140,70 @@ ALTER TABLE next_auth.users ADD COLUMN role TEXT DEFAULT 'user';
 
 - 每个用户将拥有一个 `role` 字段，默认值为 `'user'`，可根据需要设置为 `'admin'`、`'editor'` 等。
 
-### 2. 类型声明扩展
+### 2. Session 扩展
 
-在 `src/types/next-auth.d.ts` 文件中扩展 NextAuth 的类型定义，支持 `role` 字段：
+本项目扩展了 Auth.js 的 Session 功能，添加了以下字段：
+
+1. **用户 ID**
+   - 在 session 中可以直接访问 `session.user.id`
+   - 用于唯一标识用户
+   - 在组件中使用示例：
+     ```typescript
+     const { data: session } = useSession();
+     console.log(session?.user.id); // 获取用户 ID
+     ```
+
+2. **用户角色**
+   - 在 session 中可以直接访问 `session.user.role`
+   - 用于权限控制和功能访问限制
+   - 在组件中使用示例：
+     ```typescript
+     const { data: session } = useSession();
+     if (session?.user.role === 'admin') {
+       // 管理员功能
+     }
+     ```
+
+### 3. 类型声明扩展
+
+在 `src/auth.ts` 文件中扩展 NextAuth 的类型定义，支持 `id` 和 `role` 字段：
 
 ```typescript
-import NextAuth, { DefaultSession, User as NextAuthUser } from "next-auth"
-
 declare module "next-auth" {
-  interface User extends NextAuthUser {
-    role?: string
-  }
   interface Session {
     user: {
-      role?: string
-    } & DefaultSession["user"]
+      id: string;
+      role?: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+    }
+  }
+
+  interface User {
+    id: string;
+    role?: string;
   }
 }
 ```
 
-### 3. 在 Session 中注入权限字段
+### 4. 在 Session 中注入字段
 
-在 `src/auth.ts` 的 `session` 回调中，将 `role` 字段注入到 session：
+在 `src/auth.ts` 的 `session` 回调中，将 `id` 和 `role` 字段注入到 session：
 
 ```typescript
 callbacks: {
   async session({ session, user }) {
     if (session.user && user) {
-      session.user.role = user.role
+      session.user.id = user.id;
+      session.user.role = user.role;
     }
-    return session
+    return session;
   }
 }
 ```
 
-### 4. 前后端权限校验示例
+### 5. 前后端权限校验示例
 
 **前端：**
 
@@ -198,16 +227,11 @@ import { auth } from "@/auth"
 export async function GET() {
   const session = await auth()
   if (session?.user.role !== 'admin') {
-    return new Response('无权限', { status: 403 })
+    return new Response("无权限访问", { status: 403 })
   }
-  // 管理员操作
-  return new Response('OK')
+  // 处理管理员请求
 }
 ```
-
-### 5. 角色管理
-
-- 可以在 Supabase 控制台直接修改 `users` 表中的 `role` 字段，或通过后台管理页面实现角色分配。
 
 ---
 
