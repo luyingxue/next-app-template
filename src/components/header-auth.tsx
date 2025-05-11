@@ -1,7 +1,7 @@
 "use client";
 // 导入必要的依赖
 import { Button, Avatar, Popover, PopoverTrigger, PopoverContent } from "@heroui/react";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 // HeaderAuth 组件
 export default function HeaderAuth() {
@@ -38,7 +38,11 @@ export default function HeaderAuth() {
             </PopoverTrigger>
             <PopoverContent>
               <div className="px-1 py-2">
-                <Button as="a" color="secondary" href="/api/auth/signout" className="w-full">
+                <Button 
+                  color="secondary" 
+                  onPress={() => signOut()}
+                  className="w-full"
+                >
                   退出登录
                 </Button>
               </div>
@@ -51,10 +55,9 @@ export default function HeaderAuth() {
     // 未登录用户显示登录按钮
     authContent = (
       <Button
-        as="a"
         color="secondary"
-        href="/api/auth/signin"
         variant="bordered"
+        onPress={() => signIn("github")}
       >
         登录
       </Button>
