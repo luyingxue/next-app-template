@@ -1,11 +1,12 @@
+"use client";
 // 导入必要的依赖
 import { Button, Avatar } from "@heroui/react";
-import { auth, signIn } from "../auth";
+import { useSession } from "next-auth/react";
 
 // HeaderAuth 组件
-export default async function HeaderAuth() {
+export default function HeaderAuth() {
   // 获取当前用户会话
-  const session = await auth();
+  const { data: session } = useSession();
   // 定义渲染内容
   let authContent: React.ReactNode;
 
@@ -30,20 +31,14 @@ export default async function HeaderAuth() {
   } else {
     // 未登录用户显示登录按钮
     authContent = (
-      <form
-        action={async () => {
-          "use server";
-          await signIn("github");
-        }}
+      <Button
+        as="a"
+        color="secondary"
+        href="/api/auth/signin"
+        variant="bordered"
       >
-        <Button
-          type="submit"
-          color="secondary"
-          variant="bordered"
-        >
-          登录
-        </Button>
-      </form>
+        登录
+      </Button>
     );
   }
 
