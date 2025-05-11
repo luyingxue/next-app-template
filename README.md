@@ -236,3 +236,88 @@ export async function GET() {
 ---
 
 通过上述方案，项目实现了灵活的权限管理，支持前后端统一的权限校验。
+
+# Next.js 动态路由示例
+
+## 动态路由（Next.js 15）
+
+### 1. 基本概念
+
+动态路由允许你创建基于动态参数的页面。在 Next.js 15 中，动态路由的实现方式有所更新。
+
+### 2. 文件结构
+
+```
+src/app/
+  ├── blog/
+  │   ├── [slug]/        # 动态路由文件夹
+  │   │   └── page.tsx   # 动态路由页面
+  │   └── page.tsx       # 博客列表页面
+```
+
+### 3. 实现方式
+
+```typescript
+// src/app/blog/[slug]/page.tsx
+
+export default async function BlogPost({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  // 获取动态路由参数
+  const { slug } = await params
+  
+  return <div>My Post: {slug}</div>
+}
+```
+
+### 4. 关键点说明
+
+1. **文件命名**：
+   - 使用方括号 `[slug]` 创建动态路由
+   - 方括号中的名称将作为参数名
+
+2. **参数获取**：
+   - `params` 是一个 Promise
+   - 需要使用 `await` 获取参数值
+   - 通过解构获取具体的参数
+
+3. **页面组件**：
+   - 必须使用 `async` 函数
+   - 可以处理异步操作
+   - 返回 JSX 或 null
+
+### 5. 使用示例
+
+访问以下 URL 将匹配到动态路由：
+- `/blog/first-post` → `slug = 'first-post'`
+- `/blog/hello-world` → `slug = 'hello-world'`
+
+### 6. 注意事项
+
+1. **类型安全**：
+   - 使用 TypeScript 确保类型安全
+   - 参数类型为 `Promise<{ slug: string }>`
+
+2. **错误处理**：
+   - 可以使用 `notFound()` 处理 404 情况
+   - 可以使用 try-catch 处理其他错误
+
+3. **数据获取**：
+   - 可以在组件中进行异步数据获取
+   - 支持服务器端数据获取
+
+### 7. 最佳实践
+
+1. **参数验证**：
+   - 验证参数的有效性
+   - 处理无效参数的情况
+
+2. **错误处理**：
+   - 提供友好的错误提示
+   - 实现适当的错误页面
+
+3. **性能优化**：
+   - 合理使用缓存
+   - 优化数据获取策略
