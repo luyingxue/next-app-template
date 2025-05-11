@@ -1,12 +1,12 @@
-import NextAuth, { DefaultSession, User as NextAuthUser } from "next-auth"
+import { DefaultSession, User as NextAuthUser } from "next-auth";
 
 declare module "next-auth" {
   interface User extends NextAuthUser {
-    role?: string
+    role?: string;
   }
   interface Session {
     user: {
-      role?: string
-    } & DefaultSession["user"]
+      role?: string;
+    } & DefaultSession["user"];
   }
-} 
+}

@@ -1,6 +1,6 @@
-import NextAuth from "next-auth"
-import GitHub from "next-auth/providers/github"
-import { SupabaseAdapter } from "@auth/supabase-adapter"
+import NextAuth from "next-auth";
+import GitHub from "next-auth/providers/github";
+import { SupabaseAdapter } from "@auth/supabase-adapter";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [GitHub],
@@ -12,11 +12,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, user }) {
       // 将 role 字段注入 session
       if (session.user && user) {
-        session.user.role = user.role
+        session.user.role = user.role;
       }
-      return session
-    }
+
+      return session;
+    },
   },
   // 添加信任的主机名配置
-  trustHost: true
-})
+  trustHost: true,
+});

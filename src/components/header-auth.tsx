@@ -1,4 +1,4 @@
-'use client'
+"use client";
 // 导入必要的依赖
 import { Button, Avatar } from "@heroui/react";
 import { useSession } from "next-auth/react";
@@ -16,10 +16,10 @@ export default function HeaderAuth() {
       <div className="flex items-center gap-2">
         {session.user.image && (
           <Avatar
-            src={session.user.image}
+            isBordered
             alt="用户头像"
             size="sm"
-            isBordered
+            src={session.user.image}
           />
         )}
         <span className="text-sm">{session.user.email}</span>
@@ -31,7 +31,12 @@ export default function HeaderAuth() {
   } else {
     // 未登录用户显示登录按钮
     authContent = (
-      <Button as="a" color="secondary" href="/api/auth/signin" variant="bordered">
+      <Button
+        as="a"
+        color="secondary"
+        href="/api/auth/signin"
+        variant="bordered"
+      >
         登录
       </Button>
     );

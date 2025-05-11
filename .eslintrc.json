@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "import/order": "off",
+    "react/jsx-sort-props": "off",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "unused-imports/no-unused-imports": "warn",
+    "@next/next/no-img-element": "warn"
+  }
+} 

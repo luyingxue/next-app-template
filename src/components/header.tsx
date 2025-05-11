@@ -1,5 +1,12 @@
-"use client"
-import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link} from "@heroui/react";
+"use client";
+import {
+  Navbar,
+  NavbarBrand,
+  NavbarContent,
+  NavbarItem,
+  Link,
+} from "@heroui/react";
+
 import HeaderAuth from "@/components/header-auth";
 
 export const AcmeLogo = () => {
